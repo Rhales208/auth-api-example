@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const { connectDb } = require('./dbConnect')
 
 exports.createUser = (req, res) => {
@@ -26,10 +27,11 @@ exports.createUser = (req, res) => {
         userRole: 5,
       }
       // TODO: create a JWT and send back the token
+     const token = jwt.sign(user,'doNotShareYourSecret')//protect this secret
       res.status(201).send({
         success: true,
         message: 'Account created',
-        token: user, // add this to token later
+        token // add this to token later
        })
     })
     .catch(err => res.status(500).send({ 
@@ -69,6 +71,7 @@ exports.loginUser = (req, res) => {
           user.password = undefined
           return user
         })
+        const token = jwt.sign(user,'doNotShareYourSecret')
         res.send({
           success: true,
           message: 'Login successful',
